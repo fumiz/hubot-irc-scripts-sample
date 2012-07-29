@@ -1,0 +1,16 @@
+{
+  "name": "hubot-irc-scripts-sample",
+  "version": "0.0.1",
+  "dependencies": {
+    "hubot": "2.3.0",
+    "hubot-irc": "0.1.0",
+
+    "iconv"  : "1.2.3",
+    "node-icu-charset-detector" : "0.0.3",
+    "cheerio": "0.9.0",
+
+    "request": "2.9.203",
+
+    "cron": "latest"
+  }
+}
