@@ -18,7 +18,7 @@
 # Author:
 #   fumiz
 request = require 'request'
-util    = require "util"
+util    = require "util"
 
 locale = "ja"
 
@@ -47,7 +47,7 @@ searchTwitter = (keyword, callback) ->
         return
       tweet = json.results[0]
       tweetText = tweet.text.replace /\n/, ''
-      tweetUrl   = "https://twitter.com/#{tweet.from_user}/status/#{tweet.id}"
+      tweetUrl  = "https://twitter.com/#{tweet.from_user}/status/#{tweet.id}"
       callback "twitter->#{keyword}: #{tweetText} - #{tweetUrl}"
     catch error
       console.log error
