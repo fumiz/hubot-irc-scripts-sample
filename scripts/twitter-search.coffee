@@ -1,5 +1,5 @@
 # Description
-#  search twitter
+#  search twitter by given keyword and say a tweet from top of results
 #
 # Dependencies:
 #   "request": "2.9.203"
@@ -8,19 +8,17 @@
 #   None
 #
 # Commands:
-#   None
+#   @twitter <keyword>
 #
 # Notes:
-#   This script like to this:
-#   https://github.com/github/hubot-scripts/blob/master/src/scripts/tweet.coffee
-#   But this script can search specific locale and send a message body text
+#   "lang" option requires ISO 639-1 code
+#   see also -> https://dev.twitter.com/docs/api/1/get/search
 #
 # Author:
 #   fumiz
 request = require 'request'
-util    = require "util"
 
-locale = "ja"
+lang = 'ja'
 
 module.exports = (robot) ->
   robot.hear /^(@twitter) (.+)$/i, (msg) ->
@@ -29,8 +27,9 @@ module.exports = (robot) ->
       msg.send tweet
 
 searchTwitter = (keyword, callback) ->
+  encodedKeyword = encodeURIComponent keyword
   options = 
-    url: "http://search.twitter.com/search.json?q=#{keyword}&rpp=1&lang=#{locale}",
+    url: "http://search.twitter.com/search.json?q=#{encodedKeyword}&rpp=1&lang=#{lang}",
     encoding: 'utf8',
     timeout: 2000
     headers: {'user-agent': 'node twitter searcher'}
@@ -47,9 +46,10 @@ searchTwitter = (keyword, callback) ->
         return
       tweet = json.results[0]
       tweetText = tweet.text.replace /\n/, ''
-      tweetUrl  = "https://twitter.com/#{tweet.from_user}/status/#{tweet.id}"
-      callback "twitter->#{keyword}: #{tweetText} - #{tweetUrl}"
+      tweetUrl   = "https://twitter.com/#{tweet.from_user}/status/#{tweet.id_str}"
+      callback "twitter->#{keyword}: (@#{tweet.from_user}) #{tweetText} - #{tweetUrl}"
     catch error
       console.log error
+      callback 'twitter->an unexpected error occurred'
       return
 
