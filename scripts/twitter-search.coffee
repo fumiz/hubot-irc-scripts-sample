@@ -46,7 +46,7 @@ searchTwitter = (keyword, callback) ->
         return
       tweet = json.results[0]
       tweetText = tweet.text.replace /\n/, ''
-      tweetUrl   = "https://twitter.com/#{tweet.from_user}/status/#{tweet.id_str}"
+      tweetUrl  = "https://twitter.com/#{tweet.from_user}/status/#{tweet.id_str}"
       callback "twitter->#{keyword}: (@#{tweet.from_user}) #{tweetText} - #{tweetUrl}"
     catch error
       console.log error
