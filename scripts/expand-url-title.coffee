@@ -5,6 +5,7 @@
 #   "iconv": "1.2.3",
 #   "node-icu-charset-detector": "0.0.3",
 #   "cheerio": "0.9.0"
+#   "request": "2.9.203"
 #
 # Configuration:
 #   None
@@ -23,15 +24,14 @@
 # Author:
 #   fumiz
 request = require 'request'
-util    = require "util"
 charsetDetector = require "node-icu-charset-detector"
 CharsetMatch    = charsetDetector.CharsetMatch
 Iconv   = require("iconv").Iconv;
 cheerio = require 'cheerio'
 
 module.exports = (robot) ->
-  robot.hear /https?:\/\//i, (msg) ->
-    url = msg.match.input
+  robot.hear /((https?|ftp)(:\/\/[-_.!~*\'()a-zA-Z0-9;\/?:\@&=+\$,%#]+))/i, (msg) ->
+    url = msg.match[0]
     getWebPageTitle url, (title) ->
       msg.send title
 
@@ -44,7 +44,7 @@ getWebPageTitle = (url, callback) ->
 
   request options, (error, response, bodyTextBuffer) ->
       if error? 
-        callback util.format "couldn't fetch web page from %s",url
+        callback "couldn't fetch a web page from #{url}"
         return
 
       charsetMatch = new CharsetMatch(bodyTextBuffer);
@@ -54,7 +54,7 @@ getWebPageTitle = (url, callback) ->
       title = $('title').text().replace /\n/g, ''
 
       if title is ''
-        callback util.format "couldn't find title from %s",url
+        callback "couldn't find a title from #{url}"
         return
 
       callback title
